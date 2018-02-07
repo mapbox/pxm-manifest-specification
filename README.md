@@ -7,8 +7,7 @@ Pixelmonster (PXM) is a service for processing remotely-sensed images and render
 
 ## Specification
 
-See http://github.com/mapbox/pxm-manifest-specification/pxm-manifest-spec.md
-
+See https://github.com/mapbox/pxm-manifest-specification/blob/master/pxm-manifest-spec.md
 
 ## Usage
 
