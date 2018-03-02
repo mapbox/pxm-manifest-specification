@@ -163,7 +163,10 @@ def create_manifest(sources, tileset, license, account, product, date, notes,
         info['crs'] = crs
 
     if color:
-        info['color'] = color
+        info['color'] = {
+            # color formula assumed to apply to all sources
+            '.': color  
+        } 
 
     if ndv:
         info['ndv'] = ndv
