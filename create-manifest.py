@@ -136,7 +136,7 @@ class CustomType():
 @click.option('--notes', type=str, default='', help='Additional notes')
 @click.option('--bidx', type=CustomType.bdx, help="Band index array")
 @click.option('--crs', type=CustomType.crs, help="Coordinate Reference System, EPSG:NNNN")
-@click.option('--color', type=str, help="rio color formulas")
+@click.option('--color', type=str, help="rio color formula")
 @click.option('--ndv', type=CustomType.ndv, help="nodata value array")
 def create_manifest(sources, tileset, license, account, product, date, notes,
                     bidx, crs, color, ndv):
