@@ -1,5 +1,7 @@
 # pxm-manifest-specification
 
+![pixelmonster](https://cloud.githubusercontent.com/assets/83384/4510319/28472d4a-4b29-11e4-8d02-0efc58ae4e7f.png)
+
 Pixelmonster (PXM) is a service for processing remotely-sensed images and rendering them to raster tiles on the Mapbox platform.
 
 This document describes the **PXM manifest file** - the interchange format for specifying the source images and processing parameters.
