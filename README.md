@@ -38,7 +38,7 @@ Example:
 
 ### 1. Create manifest file
 
-To create a PXM manifest file, you can read the [specification](https://github.com/mapbox/pxm-manifest-specification/blob/master/pxm-manifest-spec.md) and 
+To create a PXM manifest file, read the [specification](https://github.com/mapbox/pxm-manifest-specification/blob/master/pxm-manifest-spec.md) and
 
 * Create the JSON file manually or with tools of your choice.
 * Use the included command line script, `create-manifest.py`.
@@ -60,7 +60,5 @@ python create-manifest.py \
 
 ### 2. Use manifest files to initiate a render
 
-Please contact the Mapbox Satellite team. Currently,
-we review the manifest file and run the processing using an internal workflow.
-
-
+Currently, we review the manifest file and run the processing using an internal workflow.
+Please [contact the sales team](https://www.mapbox.com/contact/sales/) and mention `PXM cc: team-satellite`.
