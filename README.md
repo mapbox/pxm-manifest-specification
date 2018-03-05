@@ -56,10 +56,8 @@ python create-manifest.py \
     --account accountname \
     --product productname \
     --date 2018 \
-    > render1.json
+    --output render1.json
 ```
-
-
 ### 2. Use manifest files to initiate a render
 
 Currently, we review the manifest file and run the processing using an internal workflow.
