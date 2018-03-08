@@ -43,14 +43,36 @@ Example:
 To create a PXM manifest file, read the [specification](https://github.com/mapbox/pxm-manifest-specification/blob/master/pxm-manifest-spec.md) and
 
 * Create the JSON file manually or with tools of your choice.
+
 * Use the included command line script, `create-manifest.py`.
 
-Send a line-delimited list of s3 URLs and specify the options as shown in this example:
+```
+Usage: create-manifest.py [OPTIONS] [SOURCES]
+
+  Create a PXM manifest file
+
+Inputs:
+  sources            Line-delimited list of s3 URLs
+
+Options:
+  -t, --tileset STR  Mapbox tileset id ({username}.{map})  [required]
+  --license TEXT     License and usage restrictions  [required]
+  --account STR      Valid mapbox account name  [required]
+  --product TEXT     Product name  [required]
+  --date STR         Images date  [required]
+  --notes TEXT       Additional notes
+  --bidx STR         Band index array
+  --crs STR          Coordinate Reference System, EPSG:NNNN
+  --color TEXT       rio color formula
+  --ndv STR          nodata value array
+  -o, --output PATH  Output file name
+  ```
+
+**Simple**
 
 ```bash
 # source-list.txt is a line-delimited list of s3 URLs
-cat source-list.txt | \
-python create-manifest.py \
+python create-manifest.py source-list.txt \
     -t accountname.tileset \
     --license "CC BY-SA" \
     --account accountname \
@@ -58,6 +80,20 @@ python create-manifest.py \
     --date 2018 \
     --output render1.json
 ```
+
+**Advanced**
+
+```bash
+# List files in a AWS S3 bucket and pipe them into the python CLI
+aws s3 ls mybucket/mydata/ --recursive | grep -E '*.tif$' | awk '{print "s3://mybucket/"$NF}' | python create-manifest.py \
+    -t accountname.tileset \
+    --license "CC BY-SA" \
+    --account accountname \
+    --product productname \
+    --date 2018 \
+    --output render1.json
+```
+
 ### 2. Use manifest files to initiate a render
 
 Currently, we review the manifest file and run the processing using an internal workflow.
