@@ -17,6 +17,7 @@ Options:
   --crs STR          Coordinate Reference System, EPSG:NNNN
   --color TEXT       rio color formulas
   --ndv STR          nodata value array
+  --output STR       Output file name
   --help             Show this message and exit.
 """
 
@@ -138,8 +139,9 @@ class CustomType():
 @click.option('--crs', type=CustomType.crs, help="Coordinate Reference System, EPSG:NNNN")
 @click.option('--color', type=str, help="rio color formula")
 @click.option('--ndv', type=CustomType.ndv, help="nodata value array")
+@click.option('--output', '-o', type=click.Path(exists=False), help='Output file name')
 def create_manifest(sources, tileset, license, account, product, date, notes,
-                    bidx, crs, color, ndv):
+                    bidx, crs, color, ndv, output):
     """Create a PXM manifest file
     """
 
@@ -171,9 +173,16 @@ def create_manifest(sources, tileset, license, account, product, date, notes,
     if ndv:
         info['ndv'] = ndv
 
-    click.echo(json.dumps({
+    manifest = json.dumps({
         'sources': sources,
-        'info': info}))
+        'info': info
+    })
+
+    if output:
+        with open(output, mode='w') as f:
+            f.write(manifest)
+    else:
+        click.echo(manifest)
 
 
 if __name__ == "__main__":
