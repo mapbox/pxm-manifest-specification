@@ -71,7 +71,7 @@ class CustomType():
                     assert datetime.datetime.strptime(value, '%Y')
 
                 if re.fullmatch('^[0-9]{4}-[0-9]{2}-[0-9]{2}$', value):
-                    assert datetime.datetime.strptime(value, '%Y%m%d')
+                    assert datetime.datetime.strptime(value, '%Y-%m-%d')
 
                 return value
             except (AssertionError, ValueError):
@@ -167,8 +167,8 @@ def create_manifest(sources, tileset, license, account, product, date, notes,
     if color:
         info['color'] = {
             # color formula assumed to apply to all sources
-            '.': color  
-        } 
+            '.': color
+        }
 
     if ndv:
         info['ndv'] = ndv
