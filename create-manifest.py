@@ -121,7 +121,7 @@ class CustomType():
     bdx = BdxParamType()
     tileset = TilesetParamType()
     date = DateParamType()
-    ndv = BdxParamType()
+    ndv = NdvParamType()
     crs = CRSParamType()
     account = MbxAccountParamType()
 
