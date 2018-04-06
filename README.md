@@ -27,7 +27,7 @@ Example:
       "customer1.aerials"
     ],
     "license": "cc by-sa 4.0",
-    "vendor": "customer1",
+    "account": "customer1",
     "product": "november_aerial_photos",
     "notes": "Aerial photos from November 2017, Northern California",
     "srs": "EPSG:26910"
