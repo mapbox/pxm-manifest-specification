@@ -30,7 +30,7 @@ Example:
     "account": "customer1",
     "product": "november_aerial_photos",
     "notes": "Aerial photos from November 2017, Northern California",
-    "srs": "EPSG:26910"
+    "crs": "EPSG:26910"
   }
 }
 ```
