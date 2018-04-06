@@ -26,7 +26,7 @@ The following is a complete PXM manifest in JSON format
           "customer1.aerials"
         ],
         "license": "cc by-sa 4.0",
-        "vendor": "customer1",
+        "account": "customer1",
         "product": "november_aerial_photos",
         "notes": "Aerial photos from November 2017, Northern California",
         "srs": "EPSG:26910"
@@ -76,12 +76,12 @@ The `info` object **must** contain the following keys:
 - tilesets
 - license
 - notes
-- vendor
+- account
 - product
 - date
 
 
-And can contain the following **optional** keys which are only required for special cases. Note that there may be additional costs associated with 
+And can contain the following **optional** keys which are only required for special cases. Note that there may be additional costs associated with
 
 - bidx
 - crs
@@ -93,7 +93,7 @@ And can contain the following **optional** keys which are only required for spec
 An array of at least one Mapbox tileset id defining the destination layer(s) to render to.
 
  Each tileset id must be of the form `{username}.{mapname}` and the username must be associated with your Mapbox account.
- 
+
  Example:
 
     "tilesets": ["customer1.map1", "customer1.map2"]
@@ -124,7 +124,7 @@ Example:
 
 #### product
 
-String identifying the unique product line distributed by `vendor`. Must not contain any spaces.
+String identifying the unique product line distributed by a vendor. Must not contain any spaces.
 
 Example:
 
