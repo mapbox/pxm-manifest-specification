@@ -2,8 +2,8 @@
 
 * Status: DRAFT, not for production use
 * Authors: Mapbox Satellite team
-* Date: February 7, 2018
-* Version: 0.3
+* Date: April 13, 2018
+* Version: 0.4
 
 ## 1. Summary
 
