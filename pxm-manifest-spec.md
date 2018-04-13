@@ -67,7 +67,7 @@ And MAY contain the following OPTIONAL keys which are only required for special 
 
 An array of at least one Mapbox tileset id defining the destination layer(s) to render to.
 
- Each tileset id must be of the form `{username}.{mapname}` and the username MUST be associated with your Mapbox account.
+ Each tileset id must be of the form `{username}.{mapname}` with all lowercase characters, and the username MUST be associated with your Mapbox account.
 
  Example:
 
