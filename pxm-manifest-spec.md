@@ -25,6 +25,7 @@ The following is a complete PXM manifest in JSON format
         "tilesets": [
           "customer1.aerials"
         ],
+        "date": "2018",
         "license": "cc by-sa 4.0",
         "account": "customer1",
         "product": "november_aerial_photos",
