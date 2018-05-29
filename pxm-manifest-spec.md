@@ -24,7 +24,7 @@ We will discuss each below:
 
 ### 3.1.  sources
 
-The `sources` object MUST be a list of source images to be rendered. Each element must be an S3 URI to a valid raster dataset, one of the following:
+The `sources` object MUST be a list of source images to be rendered. Each element must be an unique S3 URI to a valid raster dataset, one of the following:
 
 - GeoTiff (with a .tif extension)
 - JPEG2000 image (.jp2)

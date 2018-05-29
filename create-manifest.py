@@ -150,6 +150,10 @@ def create_manifest(sources, tileset, license, account, product, date, notes,
         assert source.startswith('s3')
         assert '-' not in source.split('/')[-1]
 
+    uniq_sources = set(sources)
+    if not len(uniq_sources) == len(sources):
+        raise click.ClickException('"sources" list must contain unique elements')
+
     info = {
         'tilesets': tileset,  # list
         'license': license,
