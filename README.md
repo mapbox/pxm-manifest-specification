@@ -45,15 +45,12 @@ To create a PXM manifest file, read the [specification](https://github.com/mapbo
 
 * Create the JSON file manually or with tools of your choice.
 
-* Use the included command line script, `create-manifest.py`.
+* Use the included command line script, `manifest.py`.
 
 ```
-Usage: create-manifest.py [OPTIONS] [SOURCES]
+Usage: manifest.py [OPTIONS] [SOURCES]
 
   Create a PXM manifest file
-
-Inputs:
-  sources            Line-delimited list of s3 URLs
 
 Options:
   -t, --tileset STR  Mapbox tileset id ({username}.{map})  [required]
@@ -67,13 +64,14 @@ Options:
   --color TEXT       rio color formula
   --ndv STR          nodata value array
   -o, --output PATH  Output file name
+  --help             Show this message and exit.
   ```
 
 **Simple**
 
 ```bash
 # source-list.txt is a line-delimited list of s3 URLs
-python create-manifest.py source-list.txt \
+python manifest.py source-list.txt \
     -t accountname.tileset \
     --license "CC BY-SA" \
     --account accountname \
@@ -86,7 +84,7 @@ python create-manifest.py source-list.txt \
 
 ```bash
 # List files in a AWS S3 bucket and pipe them into the python CLI
-aws s3 ls mybucket/mydata/ --recursive | grep -E '*.tif$' | awk '{print "s3://mybucket/"$NF}' | python create-manifest.py \
+aws s3 ls mybucket/mydata/ --recursive | grep -E '*.tif$' | awk '{print "s3://mybucket/"$NF}' | python manifest.py \
     -t accountname.tileset \
     --license "CC BY-SA" \
     --account accountname \
