@@ -129,7 +129,7 @@ class CustomType():
     account = MbxAccountParamType()
 
 
-def sources_handler(ctx, param, value):
+def sources_callback(ctx, param, value):
     """Validate scheme and uniqueness of sources"""
     sources = list([name.strip() for name in value])
 
@@ -139,7 +139,7 @@ def sources_handler(ctx, param, value):
         raise click.BadParameter("Sources {!r} do not have the required 's3' scheme.".format(non_s3))
 
     # Identify duplicate sources.
-    dupes = [name for (name, count) in Counter(sources).iteritems() if count > 1]
+    dupes = [name for (name, count) in Counter(sources).items() if count > 1]
     if len(dupes) > 0:
         raise click.BadParameter("Duplicated sources {!r} cannot be processed.".format(dupes))
 
@@ -147,7 +147,7 @@ def sources_handler(ctx, param, value):
 
 
 @click.command()
-@click.argument('sources', default='-', type=str, nargs=-1, handler=sources_handler)
+@click.argument('sources', nargs=-1, callback=sources_callback)
 @click.option('--tileset', '-t', type=CustomType.tileset, required=True,
               multiple=True, help='Mapbox tileset id ({username}.{map})')
 @click.option('--license', type=str, required=True, help='License and usage restrictions')
