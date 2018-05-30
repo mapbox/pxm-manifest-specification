@@ -19,12 +19,15 @@ Options:
   --ndv STR          nodata value array
   --output STR       Output file name
   --help             Show this message and exit.
+
 """
 
-import re
-import json
-import click
+from collections import Counter
 import datetime
+import json
+import re
+
+import click
 
 
 # Custom click input types
@@ -126,8 +129,25 @@ class CustomType():
     account = MbxAccountParamType()
 
 
+def sources_handler(ctx, param, value):
+    """Validate scheme and uniqueness of sources"""
+    sources = list([name.strip() for name in value])
+
+    # Validate scheme.
+    non_s3 = [name for name in sources if not name.startswith('s3://')]
+    if len(non_s3) > 0:
+        raise click.BadParameter("Sources {!r} do not have the required 's3' scheme.".format(non_s3))
+
+    # Identify duplicate sources.
+    dupes = [name for (name, count) in Counter(sources).iteritems() if count > 1]
+    if len(dupes) > 0:
+        raise click.BadParameter("Duplicated sources {!r} cannot be processed.".format(dupes))
+
+    return sources
+
+
 @click.command()
-@click.argument('sources', default='-', type=click.File('r'))
+@click.argument('sources', default='-', type=str, nargs=-1, handler=sources_handler)
 @click.option('--tileset', '-t', type=CustomType.tileset, required=True,
               multiple=True, help='Mapbox tileset id ({username}.{map})')
 @click.option('--license', type=str, required=True, help='License and usage restrictions')
@@ -144,15 +164,6 @@ def create_manifest(sources, tileset, license, account, product, date, notes,
                     bidx, crs, color, ndv, output):
     """Create a PXM manifest file
     """
-
-    sources = list([x.strip() for x in sources])
-    for source in sources:
-        assert source.startswith('s3')
-        assert '-' not in source.split('/')[-1]
-
-    uniq_sources = set(sources)
-    if not len(uniq_sources) == len(sources):
-        raise click.ClickException('"sources" list must contain unique elements')
 
     info = {
         'tilesets': tileset,  # list

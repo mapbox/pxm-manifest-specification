@@ -20,15 +20,16 @@ The manifest file MUST contain a single valid JSON object with the following req
 - `sources` : a list of source images to process
 - `info` : the parameters for the render
 
-We will discuss each below:
+We will discuss each below.
 
 ### 3.1.  sources
 
-The `sources` object MUST be a list of source images to be rendered. Each element must be an unique S3 URI to a valid raster dataset, one of the following:
+The `sources` object is a list of source images to be rendered. Each element
+MUST be an unique S3 URI, prefixed with "s3://", of a valid raster dataset in
+one of the following formats. Duplicate source URIs will not be processed.
 
 - GeoTiff (with a .tif extension)
 - JPEG2000 image (.jp2)
-- Others?? (ECW)
 
 Image must be georeferenced and use 8-bit color depth with Red, Green and Blue bands.
 
