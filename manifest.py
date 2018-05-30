@@ -129,9 +129,19 @@ class CustomType():
     account = MbxAccountParamType()
 
 
-def validate_sources(sourcefile):
-    """Validate scheme and uniqueness of sources"""
-    sources = list([name.strip() for name in sourcefile])
+def sources_callback(ctx, param, value):
+    """Validate scheme and uniqueness of sources
+
+    Notes
+    -----
+    The callback takes a fileobj, but then converts it to a sequence
+    of strings.
+
+    Returns
+    -------
+    list
+    """
+    sources = list([name.strip() for name in value])
 
     # Validate scheme.
     non_s3 = [name for name in sources if not name.startswith('s3://')]
@@ -147,7 +157,7 @@ def validate_sources(sourcefile):
 
 
 @click.command()
-@click.argument('sourcefile', default='-', type=click.File('r'))
+@click.argument('sources', default='-', type=click.File('r'), callback=sources_callback)
 @click.option('--tileset', '-t', type=CustomType.tileset, required=True,
               multiple=True, help='Mapbox tileset id ({username}.{map})')
 @click.option('--license', type=str, required=True, help='License and usage restrictions')
@@ -160,13 +170,10 @@ def validate_sources(sourcefile):
 @click.option('--color', type=str, help="rio color formula")
 @click.option('--ndv', type=CustomType.ndv, help="nodata value array")
 @click.option('--output', '-o', type=click.Path(exists=False), help='Output file name')
-def create_manifest(sourcefile, tileset, license, account, product, date, notes,
+def create_manifest(sources, tileset, license, account, product, date, notes,
                     bidx, crs, color, ndv, output):
     """Create a PXM manifest file
     """
-
-    # Validate sources.
-    sources = validate_sources(sourcefile)
 
     info = {
         'tilesets': tileset,  # list
