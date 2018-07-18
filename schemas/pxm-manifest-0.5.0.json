@@ -98,16 +98,11 @@
 		"version": {
 			"type": "string",
 			"description": "^(\\d+\\.){2}(\\d+)$"
-		},
-		"submitter": {
-			"type": "string",
-			"description": "^[a-z\\d](?:[a-z\\d]|-(?=[a-z\\d])){0,38}$"
 		}
 	},
 	"required": [
 		"info",
 		"sources",
-		"version",
-		"submitter"
+		"version"
 	]
 }

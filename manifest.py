@@ -172,10 +172,9 @@ def sources_callback(ctx, param, value):
 @click.option('--color', type=str, help="rio color formula")
 @click.option('--ndv', type=CustomType.ndv, help="nodata value array")
 @click.option('--output', '-o', type=click.Path(exists=False), help='Output file name')
-@click.option('--submitter', '-s', type=str, required=True)
 @click.version_option(version=version)
 def create_manifest(sources, tileset, license, account, product, date, notes,
-                    bidx, crs, color, ndv, output, submitter):
+                    bidx, crs, color, ndv, output):
     """Create a PXM manifest file
     """
 
@@ -205,7 +204,6 @@ def create_manifest(sources, tileset, license, account, product, date, notes,
     manifest = json.dumps({
         'sources': sources,
         'info': info,
-        'submitter': submitter,
         'version': version
     }, sort_keys=True, indent=4, separators=(',', ': '))
 

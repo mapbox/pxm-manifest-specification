@@ -20,7 +20,6 @@ The manifest file MUST contain a single valid JSON object with the following req
 - `sources` : a list of source images to process
 - `info` : the parameters for the render
 - `version` : the version string for the manifest document
-- `submitter` : Mapbox user id
 
 We will discuss each below.
 
@@ -166,15 +165,11 @@ The value is passed directly to the [rio stack](https://github.com/mapbox/raster
 
     "bidx": [1, 2, 3]
 
-## 4. submitter
-
-String identifying the github user id of the user or organization submitting this manifest.
-
-## 5. version
+## 4. version
 
 String identifying the schema version used to validate this file.
 
-## 6. Examples
+## 5. Examples
 
 The following is a minimal PXM manifest in JSON format
 
@@ -196,7 +191,6 @@ The following is a minimal PXM manifest in JSON format
         "product": "november_aerial_photos",
         "notes": "Aerial photos from November 2017, Northern California",
       },
-      "submitter": "a-user",
       "version": "0.5.0"
     }
 ```
@@ -229,20 +223,19 @@ The following is a complete PXM manifest in JSON format
         "notes": "Aerial photos from November 2017, Northern California",
         "crs": "EPSG:26910"
       },
-      "submitter": "a-user",
       "version": "0.5.0"
     }
 ```
 
-## 5. Tools
+## 6. Tools
 
 As part of this specification the following tools were developed to aid with creating and validating PXM manifest files.
 
-### 5.1 Installation
+### 6.1 Installation
 
 Python 3.6+ is required and it is recommended to use a [venv](https://docs.python.org/3/library/venv.html).
 
-### 5.2 Manifest tool creation usage
+### 6.2 Manifest tool creation usage
 
 ```
 pip install -r requirements.txt
@@ -271,13 +264,11 @@ which would generate the following output;
     "sources": [
         "s3://mybucket/test.tif"
     ],
-    "submitter": "a-user",
     "version": "0.5.0"
 }
 ```
 
-
-### 5.2 Manifest validation
+### 6.3 Manifest validation
 
 PXM manifest uses [JSON Schemas](http://json-schema.org/) to validate manifest files.
 
