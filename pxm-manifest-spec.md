@@ -3,7 +3,7 @@
 * Status: DRAFT, not for production use
 * Authors: Mapbox Satellite team
 * Date: April 13, 2018
-* Version: 0.4
+* Version: 0.5.0
 
 ## 1. Summary
 
@@ -19,6 +19,8 @@ The manifest file MUST contain a single valid JSON object with the following req
 
 - `sources` : a list of source images to process
 - `info` : the parameters for the render
+- `version` : the version string for the manifest document
+- `submitter` : Mapbox user id
 
 We will discuss each below.
 
@@ -145,31 +147,38 @@ If there are multiple color formula's that need to be applied, use a string uniq
 
 #### 3.2.9. ndv
 
-Optional. String containing a 3-element array of integers defining the the `nodata` value of the red, green and blue bands respectively.  Often, this value will be either `[255, 255, 255]` or `[0, 0, 0]` (with "" quotes). Do not specify `ndv` if your source data already contains the correct nodata value in the raster’s metadata.
+Optional. Array of size 3 of integers defining the the `nodata` value of the red, green and blue bands respectively.  Often, this value will be either `[255, 255, 255]` or `[0, 0, 0]`. Do not specify `ndv` if your source data already contains the correct nodata value in the raster’s metadata.
 
 For example,
 
-    "ndv": "[0, 0, 0]"
+    "ndv": [0, 0, 0]
     or
-    "ndv": "[255, 255, 255]"
+    "ndv": [255, 255, 255]
 
 #### 3.2.10. bidx
 
 Optional. The band indexes used to form an RGB image from source data. The source data may have superflous bands, different band ordering, or some other band configuration that prevents from pxm from using it directly.
 
-The optional `bidx` describes which bands to use. The value should be a string of comma-separated integers representing the band indexes for red, green and blue respectively. All other bands will be dropped (useful for dropping the near-infrared band for example)
+The optional `bidx` describes which bands to use. The value should be a array of integers representing the band indexes for red, green and blue respectively. All other bands will be dropped (useful for dropping the near-infrared band for example)
 
 The value is passed directly to the [rio stack](https://github.com/mapbox/rasterio/blob/master/docs/cli.rst#stack) `--bidx` option.
 
 
-    "bidx": "1,2,3"
+    "bidx": [1, 2, 3]
 
+## 4. submitter
 
-## 4. Examples
+String identifying the github user id of the user or organization submitting this manifest.
+
+## 5. version
+
+String identifying the schema version used to validate this file.
+
+## 6. Examples
 
 The following is a minimal PXM manifest in JSON format
 
-
+```json
     {
       "sources": [
         "s3://my-bucket/20171101/17RLL630825.tif",
@@ -186,14 +195,15 @@ The following is a minimal PXM manifest in JSON format
         "account": "customer1",
         "product": "november_aerial_photos",
         "notes": "Aerial photos from November 2017, Northern California",
-      }
+      },
+      "submitter": "a-user",
+      "version": "0.5.0"
     }
-
-
+```
 
 The following is a complete PXM manifest in JSON format
 
-
+```json
     {
       "sources": [
         "s3://my-bucket/20171101/17RLL630825.tif",
@@ -208,15 +218,73 @@ The following is a complete PXM manifest in JSON format
         ],
         "color": {
             ".": "sigmoidal RGB 4 0.5",
-            "7RLL675": "sigmoidal RGB 3 0.4 gamma B 1.1 saturation 1.25",
+            "7RLL675": "sigmoidal RGB 3 0.4 gamma B 1.1 saturation 1.25"
         },
-        "bidx": "1,2,3",
-        "ndv": "[255, 255, 255]",
+        "bidx": [1, 2, 3],
+        "ndv": [255, 255, 255],
         "date": "2018-02-20",
         "license": "cc by-sa 4.0",
         "account": "customer1",
         "product": "november_aerial_photos",
         "notes": "Aerial photos from November 2017, Northern California",
         "crs": "EPSG:26910"
-      }
+      },
+      "submitter": "a-user",
+      "version": "0.5.0"
     }
+```
+
+## 5. Tools
+
+As part of this specification the following tools were developed to aid with creating and validating PXM manifest files.
+
+### 5.1 Installation
+
+Python 3.6+ is required and it is recommended to use a [venv](https://docs.python.org/3/library/venv.html).
+
+### 5.2 Manifest tool creation usage
+
+```
+pip install -r requirements.txt
+python manifest.py -h
+```
+
+And example of its usage would be
+
+`python manifest.py -t test.test -s a-user --license CC --account test --product test --date 2018 s3://mybucket/test.tif
+`
+
+which would generate the following output;
+
+```json
+{
+    "info": {
+        "account": "test",
+        "date": "2018",
+        "license": "CC",
+        "notes": "",
+        "product": "test",
+        "tilesets": [
+            "test.test"
+        ]
+    },
+    "sources": [
+        "s3://mybucket/test.tif"
+    ],
+    "submitter": "a-user",
+    "version": "0.5.0"
+}
+```
+
+
+### 5.2 Manifest validation
+
+PXM manifest uses [JSON Schemas](http://json-schema.org/) to validate manifest files.
+
+The file `schemas/pxm-manifest-0.5.0.json` is used to validate the PXM manifest file.
+
+An example of using jsonschema from the command line is
+
+```
+jsonschema -i my-manifest.json schemas/pxm-manifest-0.5.0.json
+```

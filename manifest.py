@@ -29,6 +29,7 @@ import re
 
 import click
 
+version = "0.5.0"
 
 # Custom click input types
 class CustomType():
@@ -42,7 +43,7 @@ class CustomType():
                 bands = [int(x) for x in value.split(',')]
                 assert len(bands) in (3, 4)
                 assert all(b > 0 for b in bands)
-                return value
+                return bands
             except (AttributeError, AssertionError):
                 raise click.ClickException('bidx must be a string with 3 or 4 ints comma-separated, '
                                            'representing the band indexes for R,G,B(,A)')
@@ -88,12 +89,13 @@ class CustomType():
 
         def convert(self, value, param, ctx):
             try:
-                ndv = json.loads(value)
+                ndv = [int(x) for x in value.split(',')]
                 assert len(ndv) == 3
-                assert all(isinstance(v, int) for v in ndv)
-                return value
+                assert all(v > 0 for v in ndv)
+                return ndv
             except (AttributeError, TypeError):
-                raise click.ClickException('layers must follow the {account}.{id} naming (each with 32 chars max)')
+                raise click.ClickException('ndv must be a string with ints '
+                                           'comma-separated')
 
     class CRSParamType(click.ParamType):
         """Coordinate System
@@ -134,14 +136,14 @@ def sources_callback(ctx, param, value):
 
     Notes
     -----
-    The callback takes a fileobj, but then converts it to a sequence
+    The callback takes a comma separated list, but then converts it to an array
     of strings.
 
     Returns
     -------
     list
     """
-    sources = list([name.strip() for name in value])
+    sources = list([str(s).strip() for s in value.split(',')])
 
     # Validate scheme.
     non_s3 = [name for name in sources if not name.startswith('s3://')]
@@ -157,7 +159,7 @@ def sources_callback(ctx, param, value):
 
 
 @click.command()
-@click.argument('sources', default='-', type=click.File('r'), callback=sources_callback)
+@click.argument('sources', default='-', type=str, callback=sources_callback)
 @click.option('--tileset', '-t', type=CustomType.tileset, required=True,
               multiple=True, help='Mapbox tileset id ({username}.{map})')
 @click.option('--license', type=str, required=True, help='License and usage restrictions')
@@ -170,8 +172,10 @@ def sources_callback(ctx, param, value):
 @click.option('--color', type=str, help="rio color formula")
 @click.option('--ndv', type=CustomType.ndv, help="nodata value array")
 @click.option('--output', '-o', type=click.Path(exists=False), help='Output file name')
+@click.option('--submitter', '-s', type=str, required=True)
+@click.version_option(version=version)
 def create_manifest(sources, tileset, license, account, product, date, notes,
-                    bidx, crs, color, ndv, output):
+                    bidx, crs, color, ndv, output, submitter):
     """Create a PXM manifest file
     """
 
@@ -200,8 +204,10 @@ def create_manifest(sources, tileset, license, account, product, date, notes,
 
     manifest = json.dumps({
         'sources': sources,
-        'info': info
-    })
+        'info': info,
+        'submitter': submitter,
+        'version': version
+    }, sort_keys=True, indent=4, separators=(',', ': '))
 
     if output:
         with open(output, mode='w') as f:
