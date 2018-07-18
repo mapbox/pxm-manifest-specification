@@ -47,27 +47,17 @@ To create a PXM manifest file, read the [specification](https://github.com/mapbo
 
 * Use the included command line script, `manifest.py`.
 
+
+#### 1.1 Tools
+
+Python 3.6+ is required and it is recommended to use a [venv](https://docs.python.org/3/library/venv.html).
+
 ```
-Usage: manifest.py [OPTIONS] [SOURCES]
+pip install -r requirements.txt
+python manifest.py -h
+```
 
-  Create a PXM manifest file
-
-Options:
-  -t, --tileset STR  Mapbox tileset id ({username}.{map})  [required]
-  --license TEXT     License and usage restrictions  [required]
-  --account STR      Valid mapbox account name  [required]
-  --product TEXT     Product name  [required]
-  --date STR         Images date  [required]
-  --notes TEXT       Additional notes
-  --bidx STR         Band index array
-  --crs STR          Coordinate Reference System, EPSG:NNNN
-  --color TEXT       rio color formula
-  --ndv STR          nodata value array
-  -o, --output PATH  Output file name
-  --help             Show this message and exit.
-  ```
-
-**Simple**
+And example of its usage would be
 
 ```bash
 # source-list.txt is a line-delimited list of s3 URLs
@@ -80,11 +70,32 @@ python manifest.py source-list.txt \
     --output render1.json
 ```
 
-**Advanced**
+which would generate the following output;
+
+```json
+{
+    "info": {
+        "account": "accountname",
+        "date": "2018",
+        "license": "CC BY-SA",
+        "notes": "",
+        "product": "productname",
+        "tilesets": [
+            "accountname.tileset"
+        ]
+    },
+    "sources": [
+        "s3://my-bucket/test.tif"
+    ],
+    "version": "0.5.0"
+}
+```
+
+A more advanced usage would be;
 
 ```bash
 # List files in a AWS S3 bucket and pipe them into the python CLI
-aws s3 ls mybucket/mydata/ --recursive | grep -E '*.tif$' | awk '{print "s3://mybucket/"$NF}' | python manifest.py \
+aws s3 ls mybucket/mydata/ --recursive | grep -E '.tif$' | awk '{print "s3://mybucket/"$NF}' | python manifest.py \
     -t accountname.tileset \
     --license "CC BY-SA" \
     --account accountname \
@@ -93,7 +104,20 @@ aws s3 ls mybucket/mydata/ --recursive | grep -E '*.tif$' | awk '{print "s3://my
     --output render1.json
 ```
 
-### 2. Use manifest files to initiate a render
+
+### 2. Manifest validation
+
+PXM manifest uses [JSON Schemas](http://json-schema.org/) to validate manifest files.
+
+The file `schemas/pxm-manifest-0.5.0.json` is used to validate the PXM manifest file.
+
+An example of using `jsonschema` from the command line is
+
+```
+jsonschema -i render1.json schemas/pxm-manifest-0.5.0.json
+```
+
+### 3. Use manifest files to initiate a render
 
 Currently, we review the manifest file and run the processing using an internal workflow.
 Please [contact the sales team](https://www.mapbox.com/contact/sales/) and mention `PXM cc: team-satellite`.

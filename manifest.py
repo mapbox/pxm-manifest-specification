@@ -2,7 +2,7 @@
 
 Create `Manifest` file to be used by pxmcli to create a render.
 
-Usage: create-manifest.py [OPTIONS] [SOURCES]
+Usage: manifest.py [OPTIONS] [SOURCES]
 
   Create a PXM manifest file
 
@@ -133,17 +133,15 @@ class CustomType():
 
 def sources_callback(ctx, param, value):
     """Validate scheme and uniqueness of sources
-
     Notes
     -----
-    The callback takes a comma separated list, but then converts it to an array
+    The callback takes a fileobj, but then converts it to a sequence
     of strings.
-
     Returns
     -------
     list
     """
-    sources = list([str(s).strip() for s in value.split(',')])
+    sources = list([name.strip() for name in value])
 
     # Validate scheme.
     non_s3 = [name for name in sources if not name.startswith('s3://')]
@@ -159,7 +157,7 @@ def sources_callback(ctx, param, value):
 
 
 @click.command()
-@click.argument('sources', default='-', type=str, callback=sources_callback)
+@click.argument('sources', default='-', type=click.File('r'), callback=sources_callback)
 @click.option('--tileset', '-t', type=CustomType.tileset, required=True,
               multiple=True, help='Mapbox tileset id ({username}.{map})')
 @click.option('--license', type=str, required=True, help='License and usage restrictions')
