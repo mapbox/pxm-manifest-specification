@@ -17,7 +17,7 @@
 					"description": "",
 					"items": {
 						"type": "string",
-						"pattern": "^[a-z0-9-_]{1,32}\\.[a-z0-9-_]{1,32}$"
+						"pattern": "^[a-zA-Z0-9-_]{1,32}\\.[a-zA-Z0-9-_]{1,32}$"
 					}
 				},
 				"license": {
