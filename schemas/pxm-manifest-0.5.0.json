@@ -1,4 +1,6 @@
 {
+  "$schema": "http://json-schema.org/schema#",
+  "id": "https://mapbox.com/schemas/pxm-manifest-0.5.0.json",
 	"name": "PXM Manifest",
 	"type": "object",
 	"properties": {
