@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "id": "https://raw.githubusercontent.com/mapbox/pxm-manifest-specification/schemas/pxm-source-rasterio-1.0.0.json",
+  "type": "object",
+  "properties": {
+    "count": {
+      "type": "integer",
+      "minimum": 3
+    },
+    "crs": {
+      "anyOf": [
+        { "type": "string" },
+        { "type": "object" }
+      ]
+    },
+    "driver": {
+      "type": "string",
+      "enum": ["JP2OpenJPEG", "JP2ECW", "ECW", "JPEG", "GTiff"]
+    },
+    "dtype": {
+      "type": "string",
+      "enum": ["uint8"]
+    },
+    "shape": {
+      "items": [
+        {
+          "type": "integer",
+          "minimum": 200,
+          "maximum": 31000
+        },
+        {
+          "type": "integer",
+          "minimum": 200,
+          "maximum": 31000
+        }
+      ]
+    },
+    "transform": {
+      "type": "array"
+    }
+  },
+  "required": ["count", "crs", "driver", "dtype", "transform"]
+}
