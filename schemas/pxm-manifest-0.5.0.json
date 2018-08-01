@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "id": "https://raw.githubusercontent.com/mapbox/pxm-manifest-specification/schemas/pxm-manifest-0.5.0.json",
+	"name": "PXM Manifest",
+	"type": "object",
+	"properties": {
+		"sources": {
+			"type": "array",
+			"items": {
+				"type": "string",
+				"pattern": "^s3://.+/[a-zA-Z0-9_]+\\..+$"
+			}
+		},
+		"info": {
+			"type": "object",
+			"properties": {
+				"tilesets": {
+					"type": "array",
+					"description": "",
+					"items": {
+						"type": "string",
+						"pattern": "^[a-zA-Z0-9-_]{1,32}\\.[a-zA-Z0-9-_]{1,32}$"
+					}
+				},
+				"license": {
+					"type": "string",
+					"description": ""
+				},
+				"notes": {
+					"type": "string",
+					"description": ""
+				},
+				"account": {
+					"type": "string",
+					"description": "",
+					"pattern": "^[a-z0-9-_]{1,32}$"
+				},
+				"product": {
+					"type": "string",
+					"description": ""
+				},
+				"date": {
+					"type": "string",
+					"description": "",
+					"format": "date",
+					"oneOf": [{
+							"format": "date"
+						},
+						{
+							"format": "string",
+							"pattern": "^[0-9]{4}$"
+						}
+					]
+				},
+				"bidx": {
+					"type": "array",
+					"description": "",
+					"minItems": 3,
+					"maxItems": 4,
+					"items": {
+						"type": "integer",
+						"minimum": 1
+					},
+					"uniqueItems": true
+				},
+				"crs": {
+					"type": "string",
+					"description": "",
+					"pattern": "^EPSG:[0-9]+$"
+				},
+				"color": {
+					"type": "object",
+					"description": "",
+					"patternProperties": {
+						".+": {
+							"type": "string",
+							"pattern": "(saturation [0-9]+(.[0-9]+)?)?(sigmoidal [rgb]{1,3} [0-9]+ [0-9]+(.[0-9]+)?)?(gamma [rgb]{1,3} [0-9]+(.[0-9]+)?)?"
+						}
+					}
+				},
+				"ndv": {
+					"type": "array",
+					"description": "",
+					"minItems": 3,
+					"maxItems": 3,
+					"items": {
+						"type": "integer"
+					}
+				}
+			},
+			"required": [
+				"tilesets",
+				"license",
+				"notes",
+				"account",
+				"product",
+				"date"
+			]
+		},
+		"version": {
+			"type": "string",
+			"description": "^(\\d+\\.){2}(\\d+)$"
+		}
+	},
+	"required": [
+		"info",
+		"sources",
+		"version"
+	]
+}
