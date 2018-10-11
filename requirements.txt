@@ -1,2 +1,2 @@
-click~=7.0
+click==7.0
 jsonschema==2.6.0
