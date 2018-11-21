@@ -68,12 +68,12 @@ class CustomType(object):
         name = 'str'
 
         def convert(self, value, param, ctx):
-            if re.match(r"^[a-z0-9-_]{1,32}\.[a-z0-9-_]{1,32}$", value):
+            if re.match(r"^[a-zA-Z0-9-]{1,32}\\.[a-zA-Z0-9-_]{1,32}$", value):
                 return value
             else:
                 raise click.ClickException('layers must follow the {account}.'
                                            '{id} naming (each with 32 chars '
-                                           'max)')
+                                           'max). The only allowed special characters are - and _')
 
     class DateParamType(click.ParamType):
         """Date Type
@@ -233,4 +233,3 @@ def create_manifest(sources, tileset, license, account, product, date, notes,
 
 if __name__ == "__main__":
     create_manifest()
-
