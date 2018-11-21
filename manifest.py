@@ -68,7 +68,7 @@ class CustomType(object):
         name = 'str'
 
         def convert(self, value, param, ctx):
-            if re.match(r"^[a-zA-Z0-9-]{1,32}\\.[a-zA-Z0-9-_]{1,32}$", value):
+            if re.match(r"^[a-zA-Z0-9-]{1,32}\.[a-zA-Z0-9-_]{1,32}$", value):
                 return value
             else:
                 raise click.ClickException('layers must follow the {account}.'
