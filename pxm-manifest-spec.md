@@ -3,7 +3,7 @@
 * Status: DRAFT, not for production use
 * Authors: Mapbox Satellite team
 * Date: April 13, 2018
-* Version: 0.5.0
+* Version: 0.5.1
 
 ## 1. Summary
 
@@ -191,7 +191,7 @@ The following is a minimal PXM manifest in JSON format
         "product": "november_aerial_photos",
         "notes": "Aerial photos from November 2017, Northern California",
       },
-      "version": "0.5.0"
+      "version": "0.5.1"
     }
 ```
 
@@ -223,6 +223,6 @@ The following is a complete PXM manifest in JSON format
         "notes": "Aerial photos from November 2017, Northern California",
         "crs": "EPSG:26910"
       },
-      "version": "0.5.0"
+      "version": "0.5.1"
     }
 ```

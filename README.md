@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mapbox/pxm-manifest-specification.svg?branch=master)](https://travis-ci.org/mapbox/pxm-manifest-specification) 
+
 # pxm-manifest-specification
 
 ![pixelmonster](https://cloud.githubusercontent.com/assets/83384/4510319/28472d4a-4b29-11e4-8d02-0efc58ae4e7f.png)
@@ -87,7 +89,7 @@ which would generate the following output;
     "sources": [
         "s3://my-bucket/test.tif"
     ],
-    "version": "0.5.0"
+    "version": "0.5.1"
 }
 ```
 
@@ -109,12 +111,12 @@ aws s3 ls mybucket/mydata/ --recursive | grep -E '.tif$' | awk '{print "s3://myb
 
 PXM manifest uses [JSON Schemas](http://json-schema.org/) to validate manifest files.
 
-The file `schemas/pxm-manifest-0.5.0.json` is used to validate the PXM manifest file.
+The file `schemas/pxm-manifest-0.5.1.json` is used to validate the PXM manifest file.
 
 An example of using `jsonschema` from the command line is
 
 ```
-jsonschema -i render1.json schemas/pxm-manifest-0.5.0.json
+jsonschema -i render1.json schemas/pxm-manifest-0.5.1.json
 ```
 
 ### 3. Use manifest files to initiate a render
