@@ -45,7 +45,7 @@ class CustomType(object):
                 bands = [int(x) for x in value.split(',')]
                 if len(bands) in (3, 4):
                     if all(b > 0 for b in bands):
-                        return bands
+                        return value
                     else:
                         raise click.ClickException('bands must be a '
                                                    'positive number')
@@ -68,12 +68,12 @@ class CustomType(object):
         name = 'str'
 
         def convert(self, value, param, ctx):
-            if re.match(r"^[a-z0-9-_]{1,32}\.[a-z0-9-_]{1,32}$", value):
+            if re.match(r"^[a-z0-9-]{1,32}\.[a-zA-Z0-9-_]{1,32}$", value):
                 return value
             else:
                 raise click.ClickException('layers must follow the {account}.'
                                            '{id} naming (each with 32 chars '
-                                           'max)')
+                                           'max). The only allowed special characters are - (for both {account} and {id}) and _ (for {id})')
 
     class DateParamType(click.ParamType):
         """Date Type
@@ -108,16 +108,20 @@ class CustomType(object):
 
         def convert(self, value, param, ctx):
             try:
-                ndv = [int(x) for x in value.split(',')]
+                ndv = json.loads(value)
                 if not len(ndv) == 3:
                     raise click.ClickException('ndv must be 3 values')
 
-                if not all(v > 0 for v in ndv):
+                if not all(isinstance(v, int) for v in ndv):
+                    raise click.ClickException('ndv must be all integers')
+
+                if not all(v >= 0 for v in ndv):
                     raise click.ClickException('ndv must be greater than zero')
-                return ndv
+                return value
             except (AttributeError, TypeError):
-                raise click.ClickException('ndv must be a string with ints '
-                                           'comma-separated')
+                raise click.ClickException('ndv must be a string representation of a list '
+                                           'containing per-band nodata values with integers '
+                                           'that are comma-separated')
 
     class CRSParamType(click.ParamType):
         """Coordinate System
@@ -187,7 +191,7 @@ def sources_callback(ctx, param, value):
 @click.option('--bidx', type=CustomType.bdx, help="Band index array")
 @click.option('--crs', type=CustomType.crs, help="Coordinate Reference System, EPSG:NNNN")
 @click.option('--color', type=str, help="rio color formula")
-@click.option('--ndv', type=CustomType.ndv, help="nodata value array")
+@click.option('--ndv', type=CustomType.ndv, help="Nodata values in string representation of a list")
 @click.option('--output', '-o', type=click.Path(exists=False), help='Output file name')
 @click.version_option(version=version)
 def create_manifest(sources, tileset, license, account, product, date, notes,
@@ -234,6 +238,7 @@ def create_manifest(sources, tileset, license, account, product, date, notes,
 if __name__ == "__main__":
     create_manifest()
 
+    
 # PyTest only below this line
 
 from click.testing import CliRunner
@@ -271,6 +276,26 @@ manifest_args = ['sources.txt',
                  ]
 
 
+invalid_manifest_ndv = ['sources.txt',
+                        '-t', 'accountname.tileset',
+                        '--license', '"CC BY-SA"',
+                        '--account', 'accountname',
+                        '--product', 'productname',
+                        '--date', '2018',
+                        '--ndv', [0,0,0]
+]
+
+
+invalid_manifest_bidx = ['sources.txt',
+                        '-t', 'accountname.tileset',
+                        '--license', '"CC BY-SA"',
+                        '--account', 'accountname',
+                        '--product', 'productname',
+                        '--date', '2018',
+                        '--bidx', [1, 2 ,3]
+]
+
+
 @pytest.fixture
 def runner():
     runner = CliRunner()
@@ -286,6 +311,16 @@ def test_create_manifest(runner):
     assert result.exit_code == 0
     doc = json.loads(result.output)
     assert len(doc['sources']) == 1
+
+
+def test_invalid_manifest_ndv(runner):
+    result = runner.invoke(create_manifest, invalid_manifest_ndv)
+    assert result.exit_code == 1
+
+
+def test_invalid_manifest_bidx(runner):
+    result = runner.invoke(create_manifest, invalid_manifest_bidx)
+    assert result.exit_code == 1
 
 
 @pytest.mark.parametrize('tileset,expected', invalid_tileset_types)
