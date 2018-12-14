@@ -29,7 +29,7 @@ import re
 
 import click
 
-version = "0.5.0"
+version = "0.5.1"
 
 
 # Custom click input types
@@ -233,3 +233,83 @@ def create_manifest(sources, tileset, license, account, product, date, notes,
 
 if __name__ == "__main__":
     create_manifest()
+
+    
+# PyTest only below this line
+
+from click.testing import CliRunner
+from jsonschema import FormatChecker
+from jsonschema import validate
+import pytest
+
+import json
+import os
+
+
+err_msg = 'layers must follow the {account}.{id}'
+
+invalid_tileset_types = [
+    (
+        'a' * 33 + '.' + 'b' * 33,
+        err_msg
+    ),
+    (
+        '**!!',
+        err_msg
+    ),
+    (
+        'abcd-efgh',
+        err_msg
+    )
+]
+
+manifest_args = ['sources.txt',
+                 '-t', 'accountname.tileset',
+                 '--license', '"CC BY-SA"',
+                 '--account', 'accountname',
+                 '--product', 'productname',
+                 '--date', '2018'
+                 ]
+
+
+@pytest.fixture
+def runner():
+    runner = CliRunner()
+    with runner.isolated_filesystem():
+        with open('sources.txt', 'w') as f:
+            f.write('s3://my-bucket/test.tif')
+        yield runner
+
+
+def test_create_manifest(runner):
+    """Tests the create manifest function checking for exceptions."""
+    result = runner.invoke(create_manifest, manifest_args)
+    assert result.exit_code == 0
+    doc = json.loads(result.output)
+    assert len(doc['sources']) == 1
+
+
+@pytest.mark.parametrize('tileset,expected', invalid_tileset_types)
+def test_invalid_tileset(runner, tileset, expected):
+    """Tests the create manifest function checking for exceptions."""
+    args = manifest_args.copy()
+    args[2] = tileset
+    result = runner.invoke(create_manifest, args)
+    assert expected in result.output
+    assert result.exit_code == 1
+
+
+def test_json_schema(runner):
+    """Tests that the json schema is in sync with this code."""
+    schema_dir = os.path.dirname(os.path.realpath(__file__))
+    fname = os.path.join(schema_dir, f'schemas/pxm-manifest-{version}.json')
+    with open(fname) as f:
+        schema = json.load(f)
+
+        result = runner.invoke(create_manifest, manifest_args)
+        doc = json.loads(result.output)
+
+        assert result.exit_code == 0
+        # if an exception is raised by validate then the test fails
+        validate(doc, schema, format_checker=FormatChecker())
+
