@@ -1,0 +1,14 @@
+language: python
+sudo: false
+cache:
+  directories:
+    - ~/.cache/pip
+
+python:
+  - "3.6"
+before_install:
+  - pip install -U pip
+install:
+  - "pip install -r requirements-dev.txt"
+script:
+  - python -m pytest manifest.py

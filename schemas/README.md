@@ -1,15 +1,15 @@
 PXM JSON Schemas
 ================
 
-pxm-manifest-0.5.0.json
+pxm-manifest-0.5.1.json
 -----------------------
 
-This schema can be used to validate a PXM manifest file (version 0.5.0).
+This schema can be used to validate a PXM manifest file (version 0.5.1).
 
 The example below uses the Python jsonschema package.
 
 ```
-$ python -m jsonschema -i manifest.json pxm-manifest-0.5.0.json
+$ python -m jsonschema -i manifest.json pxm-manifest-0.5.1.json
 ```
 
 pxm-source-gdal-1.0.0.json
