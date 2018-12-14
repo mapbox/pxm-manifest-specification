@@ -56,7 +56,7 @@ Python 3.6+ is required and it is recommended to use a [venv](https://docs.pytho
 
 ```
 pip install -r requirements.txt
-python manifest.py -h
+python manifest.py --help
 ```
 
 And example of its usage would be
