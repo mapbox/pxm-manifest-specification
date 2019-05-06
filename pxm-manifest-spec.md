@@ -146,24 +146,24 @@ If there are multiple color formula's that need to be applied, use a string uniq
 
 #### 3.2.9. ndv
 
-Optional. Array of size 3 of integers defining the the `nodata` value of the red, green and blue bands respectively.  Often, this value will be either `[255, 255, 255]` or `[0, 0, 0]`. Do not specify `ndv` if your source data already contains the correct nodata value in the raster’s metadata.
+Optional. A string representation of a list containing per-band nodata values.  Often, this value will be either `[255, 255, 255]` or `[0, 0, 0]`. Do not specify `ndv` if your source data already contains the correct nodata value in the raster’s metadata.
 
 For example,
 
-    "ndv": [0, 0, 0]
+    "ndv": "[0, 0, 0]"
     or
-    "ndv": [255, 255, 255]
+    "ndv": "[255, 255, 255]"
 
 #### 3.2.10. bidx
 
 Optional. The band indexes used to form an RGB image from source data. The source data may have superflous bands, different band ordering, or some other band configuration that prevents from pxm from using it directly.
 
-The optional `bidx` describes which bands to use. The value should be a array of integers representing the band indexes for red, green and blue respectively. All other bands will be dropped (useful for dropping the near-infrared band for example)
+The optional `bidx` describes which bands to use. The value must be a string with 3 or 4 integers that are comma-separated, representing the band indexes for Red, Green ,Blue (,Alpha)'. All other bands will be dropped (useful for dropping the near-infrared band for example)
 
 The value is passed directly to the [rio stack](https://github.com/mapbox/rasterio/blob/master/docs/cli.rst#stack) `--bidx` option.
 
 
-    "bidx": [1, 2, 3]
+    "bidx": "1, 2, 3"
 
 ## 4. version
 
@@ -214,8 +214,8 @@ The following is a complete PXM manifest in JSON format
             ".": "sigmoidal RGB 4 0.5",
             "7RLL675": "sigmoidal RGB 3 0.4 gamma B 1.1 saturation 1.25"
         },
-        "bidx": [1, 2, 3],
-        "ndv": [255, 255, 255],
+        "bidx": "1, 2, 3",
+        "ndv": "[255, 255, 255]",
         "date": "2018-02-20",
         "license": "cc by-sa 4.0",
         "account": "customer1",

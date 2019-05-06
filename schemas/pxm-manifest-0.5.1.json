@@ -52,15 +52,9 @@
 					]
 				},
 				"bidx": {
-					"type": "array",
+					"type": "string",
 					"description": "",
-					"minItems": 3,
-					"maxItems": 4,
-					"items": {
-						"type": "integer",
-						"minimum": 1
-					},
-					"uniqueItems": true
+					"pattern": "[0-9]+,\\s?[0-9]+,\\s?[0-9]+"
 				},
 				"crs": {
 					"type": "string",
@@ -78,14 +72,11 @@
 					}
 				},
 				"ndv": {
-					"type": "array",
+					"type": "string",
 					"description": "",
-					"minItems": 3,
-					"maxItems": 3,
-					"items": {
-						"type": "integer"
+					"pattern": "\\[[0-9]+,\\s?[0-9]+,\\s?[0-9]+\\]"
+
 					}
-				}
 			},
 			"required": [
 				"tilesets",
